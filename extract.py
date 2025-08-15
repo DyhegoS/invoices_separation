@@ -2,27 +2,36 @@ from PIL import Image
 import pytesseract
 import re
 import os
+from pathlib import Path
 
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
-pasta_imagens = r"C:\Users\dyhego.silva\Documents\Python\extractnumbers\img"
+image_path = r"C:\temp\img"
 
-arquivos = [f for f in os.listdir(pasta_imagens) if f.lower().endswith(".jpg")]
+files = [f for f in os.listdir(image_path) if f.lower().endswith(".jpg")]
 
-for arquivo in arquivos:
-    caminho = os.path.join(pasta_imagens, arquivo)
-    imagem = Image.open(caminho)
+for f in files:
+    path = os.path.join(image_path, f)
+    image = Image.open(path)
 
-    largura, altura = imagem.size
-    crop_box = (0, 0, largura, 900)
-    imagem_cortada = imagem.crop(crop_box)
+    width, height = image.size
+    crop_box = (0, 0, width, 900)
+    img_croped = image.crop(crop_box)
 
-    texto = pytesseract.image_to_string(imagem_cortada, lang="eng")
+    text = pytesseract.image_to_string(img_croped, lang="eng")
 
-    match = re.search(r"N[°o]\s+(\d{6})", texto)
+    match = re.search(r"N[°o]\s+(\d{6})", text)
+    toStr = ''
+    toStr = str(match.group(1)) if match  else "número da nota não encontrada"
     
-    if match:
-        print(f"{arquivo}: Número encontrado = {match.group(1)}")
+    initials = toStr[0:3]
+    
+    if match.group(1).startswith(initials):
+        initial_folder = Path(initials)
+        initial_folder.mkdir(parents=True, exist_ok=True)
+        file_name = initial_folder / f"Nota {toStr}.jpg"
+        image.save(file_name)
+        # print(f"{f}: Número encontrado = {match.group(1)}")
     else:
-        print(f"{arquivo}: Número não encontrado")
+        print(f"{f}: Núemro da Nota {image} não encontrada!")
 
