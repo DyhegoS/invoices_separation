@@ -1,4 +1,4 @@
-# 🛍️ Script para leitura e organização de Notas Fiscais
+# 📄 Script para leitura e organização de Notas Fiscais
 
 # Sobre o projeto
 
