@@ -27,7 +27,7 @@ cd invoices_separation
 ## execute o projeto
 
 ```bash
-py main.py
+py extract.py
 ```
 
 # 🙋‍♂️Autor
